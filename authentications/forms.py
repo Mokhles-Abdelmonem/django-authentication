@@ -76,4 +76,3 @@ class ChangeUserDataForm(UserChangeForm):
             'last_name': forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Last name"}),
         }
-

@@ -79,12 +79,12 @@ class ChangePassword(LoginRequiredMixin,CreateView):
     template_name = 'accounts/cahnge_pass.html'
     def get_context_data(self, **kwargs):
         context={}
-        form = PasswordChangeForm(self.request.user, self.request.POST)
+        form = PasswordChangeForm(self.request.user, self.request.POST or None)
         context['form']=form
         return context
     def post(self, request, *args, **kwargs):
         context=self.get_context_data()
-        form = PasswordChangeForm(request.user, request.POST)
+        form = context['form']
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
@@ -97,7 +97,6 @@ class UserSettings(LoginRequiredMixin,TemplateView,CreateView):
     template_name = 'accounts/settings.html'
     def get_context_data(self, **kwargs):
         context={}
-        context['segment'] = "settings"
         return context
     def get(self, request, *args, **kwargs):
         context=self.get_context_data()
@@ -108,10 +107,10 @@ class UserSettings(LoginRequiredMixin,TemplateView,CreateView):
     def post(self, request, *args, **kwargs):
         context= self.get_context_data()
         user_data_form = ChangeUserDataForm(self.request.POST, instance=self.request.user)
-        context['user_data_form'] = user_data_form
         if user_data_form.is_valid():
             user_data_form.save()
 
+        context['user_data_form'] = user_data_form
         return render(request, self.template_name, context=context)
 
 
